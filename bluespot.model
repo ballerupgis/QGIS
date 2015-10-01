@@ -1,0 +1,239 @@
+{
+    "values": {
+        "inputs": {
+            "NUMBER_HLDNINGIGRADER": {
+                "values": {
+                    "pos": {
+                        "values": {
+                            "y": 38.75, 
+                            "x": 110.54389914696037
+                        }, 
+                        "class": "point"
+                    }, 
+                    "param": {
+                        "values": {
+                            "isAdvanced": false, 
+                            "name": "NUMBER_HLDNINGIGRADER", 
+                            "min": 0.0, 
+                            "default": 0.01, 
+                            "max": 10.0, 
+                            "value": null, 
+                            "hidden": false, 
+                            "isInteger": false, 
+                            "description": "Minimum haeldning (grader)"
+                        }, 
+                        "class": "processing.core.parameters.ParameterNumber"
+                    }
+                }, 
+                "class": "processing.modeler.ModelerAlgorithm.ModelerParameter"
+            }, 
+            "RASTERLAYER_DEM": {
+                "values": {
+                    "pos": {
+                        "values": {
+                            "y": 37.85535039412591, 
+                            "x": 340.71770867077
+                        }, 
+                        "class": "point"
+                    }, 
+                    "param": {
+                        "values": {
+                            "isAdvanced": false, 
+                            "name": "RASTERLAYER_DEM", 
+                            "showSublayersDialog": true, 
+                            "value": null, 
+                            "exported": null, 
+                            "hidden": false, 
+                            "optional": false, 
+                            "description": "DEM"
+                        }, 
+                        "class": "processing.core.parameters.ParameterRaster"
+                    }
+                }, 
+                "class": "processing.modeler.ModelerAlgorithm.ModelerParameter"
+            }
+        }, 
+        "helpContent": {
+            "ALG_CREATOR": "", 
+            "NUMBER_HLDNINGIGRADER": "Den v\u00e6rdi kan justeres for at \u00e6ndre p\u00e5 udbredelsen af bluespots", 
+            "ALG_DESC": "Laver bluspot og topografiske oplande vha. SAGA fill sinks.", 
+            "RASTERLAYER_DEM": "H\u00f8jdemodellen skal v\u00e6re i SAGA's .sdat format"
+        }, 
+        "group": "DEM", 
+        "name": "Bluespot", 
+        "algs": {
+            "SAGAFILLSINKSWANGLIU_1": {
+                "values": {
+                    "name": "SAGAFILLSINKSWANGLIU_1", 
+                    "paramsFolded": true, 
+                    "outputs": {}, 
+                    "pos": {
+                        "values": {
+                            "y": 104.05000000000001, 
+                            "x": 346.85000000000014
+                        }, 
+                        "class": "point"
+                    }, 
+                    "outputsFolded": false, 
+                    "dependencies": [], 
+                    "params": {
+                        "MINSLOPE": {
+                            "values": {
+                                "name": "NUMBER_HLDNINGIGRADER"
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ValueFromInput"
+                        }, 
+                        "ELEV": {
+                            "values": {
+                                "name": "RASTERLAYER_DEM"
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ValueFromInput"
+                        }
+                    }, 
+                    "active": true, 
+                    "consoleName": "saga:fillsinkswangliu", 
+                    "description": "Fill sinks (wang & liu)"
+                }, 
+                "class": "processing.modeler.ModelerAlgorithm.Algorithm"
+            }, 
+            "GDALOGRPOLYGONIZE_1": {
+                "values": {
+                    "name": "GDALOGRPOLYGONIZE_1", 
+                    "paramsFolded": true, 
+                    "outputs": {}, 
+                    "pos": {
+                        "values": {
+                            "y": 237.94999999999993, 
+                            "x": 569.4500000000005
+                        }, 
+                        "class": "point"
+                    }, 
+                    "outputsFolded": true, 
+                    "dependencies": [], 
+                    "params": {
+                        "INPUT": {
+                            "values": {
+                                "alg": "SAGAFILLSINKSWANGLIU_1", 
+                                "output": "WSHED"
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ValueFromOutput"
+                        }, 
+                        "FIELD": "opland"
+                    }, 
+                    "active": true, 
+                    "consoleName": "gdalogr:polygonize", 
+                    "description": "Polygonize (raster to vector)"
+                }, 
+                "class": "processing.modeler.ModelerAlgorithm.Algorithm"
+            }, 
+            "GDALOGRRASTERCALCULATOR_1": {
+                "values": {
+                    "name": "GDALOGRRASTERCALCULATOR_1", 
+                    "paramsFolded": true, 
+                    "outputs": {
+                        "OUTPUT": {
+                            "values": {
+                                "description": "Bluespot", 
+                                "pos": {
+                                    "values": {
+                                        "y": 302.94999999999993, 
+                                        "x": 350.4500000000005
+                                    }, 
+                                    "class": "point"
+                                }
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ModelerOutput"
+                        }
+                    }, 
+                    "pos": {
+                        "values": {
+                            "y": 242.94999999999993, 
+                            "x": 352.4500000000005
+                        }, 
+                        "class": "point"
+                    }, 
+                    "outputsFolded": true, 
+                    "dependencies": [], 
+                    "params": {
+                        "INPUT_F": null, 
+                        "BAND_F": "1", 
+                        "INPUT_D": null, 
+                        "INPUT_E": null, 
+                        "BAND_B": "1", 
+                        "INPUT_C": null, 
+                        "BAND_A": "1", 
+                        "EXTRA": null, 
+                        "RTYPE": 5, 
+                        "BAND_D": "1", 
+                        "NO_DATA": "-9999", 
+                        "BAND_E": "1", 
+                        "FORMULA": "B-A", 
+                        "INPUT_A": {
+                            "values": {
+                                "name": "RASTERLAYER_DEM"
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ValueFromInput"
+                        }, 
+                        "INPUT_B": {
+                            "values": {
+                                "alg": "SAGAFILLSINKSWANGLIU_1", 
+                                "output": "FILLED"
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ValueFromOutput"
+                        }, 
+                        "BAND_C": "1"
+                    }, 
+                    "active": true, 
+                    "consoleName": "gdalogr:rastercalculator", 
+                    "description": "Raster calculator"
+                }, 
+                "class": "processing.modeler.ModelerAlgorithm.Algorithm"
+            }, 
+            "QGISSIMPLIFYGEOMETRIES_1": {
+                "values": {
+                    "name": "QGISSIMPLIFYGEOMETRIES_1", 
+                    "paramsFolded": true, 
+                    "outputs": {
+                        "OUTPUT": {
+                            "values": {
+                                "description": "Topografiske oplande", 
+                                "pos": {
+                                    "values": {
+                                        "y": 379.94999999999993, 
+                                        "x": 596.4500000000005
+                                    }, 
+                                    "class": "point"
+                                }
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ModelerOutput"
+                        }
+                    }, 
+                    "pos": {
+                        "values": {
+                            "y": 306.94999999999993, 
+                            "x": 585.4500000000005
+                        }, 
+                        "class": "point"
+                    }, 
+                    "outputsFolded": true, 
+                    "dependencies": [], 
+                    "params": {
+                        "INPUT": {
+                            "values": {
+                                "alg": "GDALOGRPOLYGONIZE_1", 
+                                "output": "OUTPUT"
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ValueFromOutput"
+                        }, 
+                        "TOLERANCE": 0.5
+                    }, 
+                    "active": true, 
+                    "consoleName": "qgis:simplifygeometries", 
+                    "description": "Simplify geometries"
+                }, 
+                "class": "processing.modeler.ModelerAlgorithm.Algorithm"
+            }
+        }
+    }, 
+    "class": "processing.modeler.ModelerAlgorithm.ModelerAlgorithm"
+}
